@@ -61,7 +61,8 @@ def api_response(func):
             return json_response({"data": ret})
 
         except AppException as e:
-            return json_response({"error": f"{e}"})
+
+            return json_response({"error": e.message}, status=e.code or 200)
         except Exception as e:
             _print_exc()
             err = "An unknown error occured"
@@ -77,7 +78,10 @@ def get_bearer_token(headers: Headers) -> str:
 
 
 class AppException(Exception):
-    pass
+    def __init__(self, message: str, *args, code: int = 400):
+        super().__init__(message, *args)
+        self.code = code
+        self.message = message
 
 
 POST_REQUEST = dict(strict_slashes=False, methods=["post"])
