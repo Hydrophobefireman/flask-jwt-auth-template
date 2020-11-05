@@ -5,7 +5,7 @@ from time import time
 from flask import Flask, Response, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from floodgate import guard
-
+from sqlalchemy.orm import validates
 
 from constants import IS_PROD, FLASK_SECRET, DATABASE_URL
 from danger import check_password_hash, generate_password_hash
@@ -90,8 +90,9 @@ class UserTable(db.Model):
             "created_at": self.created_at,
             "_secure_": {},
         }
-
-    def _validate_user(self, user: str):
+    
+    @validates("user")
+    def _validate_user(self,key, user: str):
         length = len(user)
         if length > 30:
             raise AppException("Username cannot be longer than 30 characters")
@@ -99,11 +100,14 @@ class UserTable(db.Model):
         #     raise AppException("Username cannot be shorter than 4 characters")
         if sanitize(user) != user:
             raise AppException("Username cannot have special characters or whitespace")
-
-    def _validate_password(self, password: str):
+        return user
+    
+    @validates("password_hash")
+    def _validate_password(self,key, password: str):
         length = len(password)
         if length < 4:
             raise AppException("Password cannot be shorter than 4 characters")
+        return generate_password_hash(val)
 
     def __init__(
         self,
@@ -116,39 +120,6 @@ class UserTable(db.Model):
         self.user = user.lower()
         self.name = name
         self.password_hash = password
-
-    def _is_same_value(self, key: str, val) -> bool:
-        if hasattr(self, key):
-            previous_value = super().__getattribute__(key)
-
-            return (
-                (previous_value and check_password_hash(previous_value, val))
-                if key == "password_hash"
-                else previous_value == val
-            )
-
-    def __setattr__(self, key: str, val):
-        """Checks for data type validity before passing it to
-            the database
-        Args:
-            key (str)
-            val (Any)
-        Raises:
-            ValueError: An error when the passed data doesn't satisfy the constraints.
-                        It can be wrapped in str() and returned back to client
-        """
-        # if the value is same, don't attempt any SQL operation
-        if self._is_same_value(key, val):
-            return
-
-        if key == "password_hash":
-            self._validate_password(val)
-            val = generate_password_hash(val)
-        else:
-            if key == "user":
-                self._validate_user(val)
-
-        super().__setattr__(key, val)
 
 
 def raise_if_invalid_data(*args):
