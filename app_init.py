@@ -107,7 +107,7 @@ class UserTable(db.Model):
         length = len(password)
         if length < 4:
             raise AppException("Password cannot be shorter than 4 characters")
-        return generate_password_hash(val)
+        return generate_password_hash(password)
 
     def __init__(
         self,
