@@ -4,7 +4,6 @@
 from functools import wraps as _wraps
 from json import dumps as _dumps
 from re import compile as _compile
-from time import time as _time
 from traceback import print_exc as _print_exc
 
 from flask import request as _request

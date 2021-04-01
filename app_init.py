@@ -1,14 +1,10 @@
-from os import environ
-from time import time
-
-
-from flask import Flask, Response, request, send_from_directory
+from flask import Flask, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from floodgate import guard
 from sqlalchemy.orm import validates
 
 from constants import IS_PROD, FLASK_SECRET, DATABASE_URL
-from danger import check_password_hash, generate_password_hash
+from danger import generate_password_hash
 
 from util import (
     AppException,
@@ -90,9 +86,9 @@ class UserTable(db.Model):
             "created_at": self.created_at,
             "_secure_": {},
         }
-    
+
     @validates("user")
-    def _validate_user(self,key, user: str):
+    def _validate_user(self, key, user: str):
         length = len(user)
         if length > 30:
             raise AppException("Username cannot be longer than 30 characters")
@@ -101,9 +97,9 @@ class UserTable(db.Model):
         if sanitize(user) != user:
             raise AppException("Username cannot have special characters or whitespace")
         return user
-    
+
     @validates("password_hash")
-    def _validate_password(self,key, password: str):
+    def _validate_password(self, key, password: str):
         length = len(password)
         if length < 4:
             raise AppException("Password cannot be shorter than 4 characters")
