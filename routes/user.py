@@ -1,5 +1,3 @@
-from flask import request
-
 from api_handlers import users
 from app_init import app
 from util import POST_REQUEST, ParsedRequest, api_response, json_response

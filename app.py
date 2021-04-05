@@ -3,7 +3,11 @@ from set_env import setup_env
 setup_env()
 
 from app_init import app
-from routes import user
+
+try:
+    import routes.user
+except ImportError:
+    from routes import user
 
 
 if __name__ == "__main__":

@@ -40,10 +40,11 @@ http {
         location / {
             proxy_set_header Host $http_host;
             proxy_redirect off;
+            add_header x-served-by "nginx";
             proxy_pass http://app_server;
         }
         location /docs/ {
-            add_header X-Proxy-Cached "1";
+            add_header x-proxy-cached "1";
             expires 8h;
             alias /app/docs/;
             try_files $uri =404;

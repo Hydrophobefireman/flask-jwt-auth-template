@@ -64,8 +64,9 @@ def decode_token(data: str) -> dict:
         return _decode_token(data, _SIGNING_KEY, algorithms=["HS512"])
     except _EXPIRED:
         return None
-    except:
-        raise AppException("Invalid token")
+    except Exception as e:
+        print(e)
+        raise AppException("Invalid token", 400)
 
 
 def to_str(x):
