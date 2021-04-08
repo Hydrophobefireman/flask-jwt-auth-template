@@ -30,7 +30,7 @@ db = SQLAlchemy(app)
 
 
 @app.before_request
-@guard(ban_time=5, ip_resolver="heroku" if IS_PROD else None, request_count=3, per=1)
+@guard(ban_time=5, ip_resolver="heroku" if IS_PROD else None, request_count=50, per=15)
 def gate_check():
     pass
 

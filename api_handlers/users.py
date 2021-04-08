@@ -9,8 +9,6 @@ from auth_token import (
     require_jwt,
 )
 from danger import (
-    ACCESS_TOKEN,
-    REFRESH_TOKEN,
     check_password_hash,
     create_token,
     decode_token,
@@ -19,6 +17,8 @@ from danger import (
 from util import AppException
 from util import ParsedRequest as _Parsed
 from util import json_response
+
+from response_caching import cache
 
 from .common import add_to_db, get_user_by_id, save_to_db
 from .cred_manager import CredManager
