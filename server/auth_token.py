@@ -31,10 +31,11 @@ def regenerate_access_token(refresh: dict) -> dict:
     user = refresh.get("user")
     integrity = refresh.get("integrity")
     data = get_user_by_id(user)
-    current = integrity(data.user, data.password_hash)
+    is_admin = data.is_admin
+    current = get_integrity(data.user, data.password_hash)
     if check(integrity, current):
         return (
-            issue_access_token(user),
+            issue_access_token(user, is_admin),
             issue_refresh_token(user, data.password_hash),
         )
     return None, None
