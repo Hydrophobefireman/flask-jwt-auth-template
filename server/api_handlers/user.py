@@ -1,5 +1,5 @@
-from flask import request as flask_request
-from psycopg2 import IntegrityError
+# pylint: disable=no-name-in-module
+from psycopg2.errors import UniqueViolation
 
 from server.models import UserTable
 from server.auth_token import (
@@ -36,7 +36,7 @@ def register(request: _Parsed):
         add_to_db(user_data)
         return user_data.as_json
     except Exception as e:
-        if isinstance(getattr(e, "orig", None), IntegrityError):
+        if isinstance(getattr(e, "orig", None), UniqueViolation):
             raise AppException("User exists")
         raise e
 
