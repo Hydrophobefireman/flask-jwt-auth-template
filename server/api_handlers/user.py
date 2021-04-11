@@ -14,7 +14,7 @@ from server.danger import (
     decode_token,
 )
 
-from server.util import AppException
+from server.util import AppException, get_bearer_token
 from server.util import ParsedRequest as _Parsed
 from server.util import json_response
 
@@ -68,8 +68,8 @@ def login(request: _Parsed):
 
 
 def re_authenticate(req: _Parsed):
-    headers = flask_request.headers
-    access_token = headers.get("x-access-token")
+    headers = req.headers
+    access_token = get_bearer_token(headers)
     decoded_access = decode_token(access_token)
 
     if decoded_access is None:
