@@ -1,7 +1,7 @@
 from flask import request as flask_request
 from psycopg2 import IntegrityError
 
-from server.app_init import UserTable
+from server.models import UserTable
 from server.auth_token import (
     issue_access_token,
     issue_refresh_token,
