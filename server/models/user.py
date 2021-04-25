@@ -8,7 +8,7 @@ from sqlalchemy.orm import validates
 from .shared import db
 
 
-class UserTable(db.Model):
+class User(db.Model):
     # pylint: disable=E1101
     _id: str = db.Column(db.String(30), unique=True, nullable=False, primary_key=True)
     user: str = db.Column(db.String(30), unique=True, nullable=False)

@@ -17,10 +17,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 
-# not exactly as we have 4 workers running, it's basically a lottery if you hit the same worker thrice
-# gate = Gate(use_heroku_ip_resolver=IS_PROD, limit=1, min_requests=3)
-
-
 @app.before_request
 @guard(ban_time=5, ip_resolver="heroku" if IS_PROD else None, request_count=50, per=15)
 def gate_check():
@@ -29,12 +25,20 @@ def gate_check():
 
 @app.errorhandler(404)
 def catch_all(e):
-    return json_response({"error": "not found"})
+    return json_response(
+        {"error": "not found"},
+        status=404,
+        headers={"access-control-allow-origin": get_origin(request)},
+    )
 
 
 @app.errorhandler(405)
 def method_not_allowed(e):
-    return json_response({"error": "Method not allowed"})
+    return json_response(
+        {"error": "Method not allowed"},
+        status=405,
+        headers={"access-control-allow-origin": get_origin(request)},
+    )
 
 
 EXPOSE_HEADERS = ", ".join(("x-access-token", "x-refresh-token", "x-dynamic"))

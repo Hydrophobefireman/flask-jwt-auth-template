@@ -1,6 +1,6 @@
 from sqlalchemy import func as _func
 
-from server.models import UserTable as _U
+from server.models import User as _U
 from server.models import db as _db
 from server.util import AppException as _AppException
 from server.util import sanitize

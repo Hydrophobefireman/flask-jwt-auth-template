@@ -1,7 +1,7 @@
 # pylint: disable=no-name-in-module
 from psycopg2.errors import UniqueViolation
 
-from server.models import UserTable
+from server.models import User
 from server.auth_token import (
     issue_access_token,
     issue_refresh_token,
@@ -32,7 +32,7 @@ def register(request: _Parsed):
     password = get("password")
 
     try:
-        user_data = UserTable(user, name, password)
+        user_data = User(user, name, password)
         add_to_db(user_data)
         return user_data.as_json
     except Exception as e:
