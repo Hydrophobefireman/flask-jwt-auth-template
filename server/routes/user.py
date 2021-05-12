@@ -1,46 +1,42 @@
-from server.resolvers.user import (
-    AuthenticationResolver,
-    LoginResolver,
-    RegisterResolver,
-    UserResolver,
-)
-
+from server.api_handlers import user
 from server.app_init import app
-from server.util import POST_REQUEST, api_response, crud
+from server.util import ParsedRequest, api_response
 
 
-user_resolver = UserResolver()
-register_resolver = RegisterResolver()
-login_resolver = LoginResolver()
-authentication_resolver = AuthenticationResolver()
 # user registration route
 # POST request
-@app.route("/accounts/register/", **crud("post"))
-@app.route("/register", **crud("post"))
+@app.post("/accounts/register/", strict_slashes=False)
+@app.post("/register", strict_slashes=False)
 @api_response
 def register():
-    return register_resolver.resolve_for()
+    return user.register(ParsedRequest())
 
 
-@app.route("/accounts/login", **POST_REQUEST)
+@app.post("/accounts/login", strict_slashes=False)
 @api_response
 def login():
-    return login_resolver.resolve_for()
+    return user.login(ParsedRequest())
 
 
 # refresh the JWT Token
 # GET request
-@app.route("/accounts/token/refresh/", strict_slashes=False)
+@app.get("/accounts/token/refresh/", strict_slashes=False)
 @api_response
 def refesh_token():
-    return authentication_resolver.resolve_for()
+    return user.re_authenticate(ParsedRequest())
 
 
 # ===========================================================================
 #                                  Users
 
 
-@app.route("/accounts/<user>/", **crud("patch", "get"))
+@app.get("/accounts/<user>/", strict_slashes=False)
 @api_response
-def edit_user(user):
-    return user_resolver.resolve_for(user)
+def view_user(username):
+    return user.get_user_details(ParsedRequest(), username)
+
+
+@app.patch("/accounts/<user>/", strict_slashes=False)
+@api_response
+def edit_user(username):
+    return user.edit(ParsedRequest(), username)

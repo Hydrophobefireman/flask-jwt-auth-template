@@ -90,10 +90,3 @@ class AppException(Exception):
         super().__init__(message, *args)
         self.code = code
         self.message = message
-
-
-POST_REQUEST = dict(strict_slashes=False, methods=["post"])
-
-
-def crud(*methods):
-    return {"strict_slashes": False, "methods": methods}
