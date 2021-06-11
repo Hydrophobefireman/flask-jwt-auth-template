@@ -1,9 +1,9 @@
-from server.set_env import setup_env
+from set_env import setup_env
 
 setup_env()
 
 
-from server.app import app as core_app
+from app.main import app as core_app
 
 
 def run_coreserver():

@@ -4,7 +4,7 @@ GUNICORN_COMMANDS = (
     [
         "gunicorn",
         "-c",
-        "server/gunicorn.conf.py",
+        "app/gunicorn.conf.py",
         "runner:core_app",
         "-b",
         "localhost:5000",
