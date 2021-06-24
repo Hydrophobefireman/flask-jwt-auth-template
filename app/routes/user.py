@@ -1,4 +1,5 @@
-from app.db.mutations.user import commit, create_user
+from app.db.mutations.user import create_user
+from app.db.mutations.util import commit
 from app.db.queries.user import get_user_by_username
 from app.decorators.api_response import api
 from app.exceptions.app_exception import AppException

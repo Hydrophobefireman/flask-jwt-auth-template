@@ -1,15 +1,9 @@
-from app.models.user import UserIn
-from app.db.schemas import User
 from app.db import db
-from app.db.errors import check_integrity_error
-
+from app.db.mutations.util import commit
+from app.db.schemas import User
+from app.models.user import UserIn
 
 # pylint: disable=E1101
-def commit():
-    try:
-        db.session.commit()
-    except Exception as e:
-        check_integrity_error(e)
 
 
 def _create(col, batch, return_json):

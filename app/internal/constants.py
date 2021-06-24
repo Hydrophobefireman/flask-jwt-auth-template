@@ -2,12 +2,10 @@ from os import environ, path
 from pathlib import Path
 from tempfile import gettempdir
 
-IS_PROD = environ.get("IS_DEV") is None
+IS_PROD = environ.get("IS_PROD") is not None
 
-if IS_PROD:
-    print(
-        "assuming production environment, change `IS_DEV` in your .env.json to switch to dev"
-    )
+if not IS_PROD:
+    print("assuming dev environment, add `IS_PROD` to your env to switch to dev")
 
 # JWT Signing key, make sure this stays same or every user will need to relogin
 SIGNING_KEY = environ.get("JWT_SIGNING_KEY")
