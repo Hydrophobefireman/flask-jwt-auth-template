@@ -1,6 +1,8 @@
 from os import environ, path
 from pathlib import Path
 from tempfile import gettempdir
+from dotenv import load_dotenv
+load_dotenv()
 
 IS_PROD = environ.get("IS_PROD") is not None
 

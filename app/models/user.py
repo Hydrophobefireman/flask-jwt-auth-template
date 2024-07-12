@@ -7,7 +7,15 @@ from app.internal.helpers import sanitize
 
 from app.exceptions import AppException
 from app.models.base import CustomBase
-from pydantic import validator, constr
+from pydantic import constr, AfterValidator
+from typing_extensions import Annotated
+
+
+def validate_user(user: str):
+    sanitized = sanitize(user)
+    if sanitized != user.lower():
+        raise AppException("User cannot contain invalid characters")
+    return sanitized
 
 
 class UserSession(BaseModel):
@@ -16,11 +24,12 @@ class UserSession(BaseModel):
     is_admin: bool
 
 
-PasswordType = constr(min_length=4)
+PasswordType = Annotated[constr(min_length=4), AfterValidator(generate_password_hash)]
+UserName = Annotated[constr(strip_whitespace=True, max_length=100), validate_user]
 
 
 class AuthModel(BaseModel):
-    user: constr(strip_whitespace=True, to_lower=True, min_length=3, max_length=50)
+    user: Annotated[UserName, str.lower]
 
 
 class LoginModel(AuthModel):
@@ -28,14 +37,7 @@ class LoginModel(AuthModel):
 
 
 class _UserBase(AuthModel):
-    name: constr(strip_whitespace=True, max_length=100)
-
-    @validator("user")
-    def validate_user(cls, user: str):
-        sanitized = sanitize(user)
-        if sanitized != user.lower():
-            raise AppException("User cannot contain invalid characters")
-        return sanitized
+    name: constr(strip_whitespace=True, max_length=256) # type: ignore
 
 
 class UserEditable(_UserBase):
@@ -46,13 +48,9 @@ class UserIn(_UserBase):
     is_admin: bool
     password_hash: PasswordType
 
-    @validator("password_hash")
-    def validate_pw_hash(cls, password: str):
-        return generate_password_hash(password)
-
 
 class UserOut(CustomBase):
-    id_ = str
+    id_: str
     user: str
     name: str
     is_admin: bool
