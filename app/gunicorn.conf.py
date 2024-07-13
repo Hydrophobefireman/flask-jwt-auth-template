@@ -6,7 +6,7 @@ def when_ready(server):
         pass
 
 
-bind = "unix:///tmp/nginx.socket"
+bind = "0.0.0.0:8080"
 workers = 4
 threads = 4
 max_requests = 1200

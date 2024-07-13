@@ -4,7 +4,7 @@ from flask import request
 
 def not_found(e):
     return json_response(
-        {"error": "not found"},
+        {"error": "Not Found"},
         status=404,
         headers={"access-control-allow-origin": get_origin(request)},
     )
