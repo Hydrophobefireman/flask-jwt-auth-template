@@ -1,0 +1,6 @@
+[tool.ruff]
+
+
+[project]
+name = "app"
+version = "0.0.1"

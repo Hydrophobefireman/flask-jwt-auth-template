@@ -1,0 +1,63 @@
+services:
+  app:
+    init: true
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    build:
+      dockerfile: docker/Dockerfile.dev
+      context: .
+    volumes:
+      - ./:/code
+    command: python -u dev.py
+    ports:
+      - 127.0.0.1:3000:3000
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+
+    attach: false
+
+  pg_admin:
+    attach: false
+    image: dbgate/dbgate
+    restart: unless-stopped
+    ports:
+      - 8081:3000
+    volumes:
+      - dbgate-data:/root/.dbgate
+    environment:
+      CONNECTIONS: con1
+
+      LABEL_con1: Postgres
+      SERVER_con1: postgres
+      USER_con1: postgres
+      PASSWORD_con1: postgrespassword
+      PORT_con1: 5432
+      ENGINE_con1: postgres@dbgate-plugin-postgres
+    logging:
+      driver: none
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "127.0.0.1:9000:9000" # MinIO port
+      - "127.0.0.1:9001:9001" # MinIO Console port
+    environment:
+      MINIO_ROOT_USER: "foobarbaz"
+      MINIO_ROOT_PASSWORD: "foobarbaz"
+    volumes:
+      - ./_s3:/data
+    command: server /data --console-address ":9001"
+
+volumes:
+  db_data:
+  dbgate-data:

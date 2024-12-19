@@ -1,0 +1,257 @@
+#!/usr/bin/env python
+
+import sys
+from argparse import ArgumentParser
+from functools import wraps
+from pathlib import Path
+from subprocess import Popen
+from os import chdir
+from os.path import dirname
+
+
+def run_in_docker(fn):
+    @wraps(fn)
+    def run(*args, **kwargs):
+        if not is_docker():
+            raise RunInDockerException()
+        return fn(*args, **kwargs)
+
+    return run
+
+
+def uses_db(fn):
+    @wraps(fn)
+    def run(*a, **k):
+        from app.main import app
+
+        with app.app_context():
+            fn(*a, **k)
+
+    return run
+
+
+@run_in_docker
+@uses_db
+def assemble_fake_data():
+    raise NotImplementedError()
+    # db.session.commit()
+
+
+def run(args: str | list) -> Popen:
+    print(f"running: {args}")
+    proc = Popen(args.split() if isinstance(args, str) else args)
+    return proc
+
+
+def wait(args: str | list) -> int:
+    return run(args).wait()
+
+
+def is_docker():
+    return Path("/.dockerenv").exists()
+
+
+ACTIONS = {
+    "run-server",
+    "reset-db",
+    "reset-migrations",
+    "init-migrations",
+    "migrate",
+    "seed-db",
+    "enter-container",
+    "debug",
+    "bootstrap",
+    "frontend",
+    "all",
+    "apply-migrations",
+}
+
+
+def parse_args():
+    parser = ArgumentParser(
+        prog="Management commands for app",
+        description=f"Run as: ./manage [{' / '.join(ACTIONS)}]",
+    )
+    parser.add_argument("action")
+    parser.add_argument("--migrate-message", default="migration")
+    parser.add_argument("--skip-upgrade", action="store_true")
+    return parser.parse_args()
+
+
+def run_server():
+    try:
+        wait("docker compose up --build")
+    except KeyboardInterrupt:
+        try:
+            wait("docker compose down")
+        except KeyboardInterrupt:
+            pass
+
+
+@run_in_docker
+@uses_db
+def reset_db():
+    from app.db import db
+
+    print("Clearing tables")
+    db.drop_all()
+    print("Making tables")
+    db.create_all()
+
+
+@run_in_docker
+@uses_db
+def reset_migrations():
+    from shutil import rmtree
+    from sqlalchemy import text
+    from app.db.base import db
+
+    print("Resetting migrations")
+    rmtree(BACKEND_DIR / "migrations", ignore_errors=True)
+    try:
+        db.session.execute(text('DELETE FROM "public"."alembic_version";'))
+        db.session.commit()
+    except:  # noqa: E722
+        db.session.rollback()
+
+
+@run_in_docker
+def init_migrations():
+    from os import chdir
+
+    chdir(BACKEND_DIR)
+    reset_migrations()
+    Path(BACKEND_DIR / "migrations").mkdir(exist_ok=True)
+    wait("flask --app runner:core_app db init")
+
+
+@run_in_docker
+def apply_migrations():
+    print("Running upgrade")
+    wait(["flask", "--app", "runner:core_app", "db", "upgrade"])
+
+
+@run_in_docker
+def migrate(message, skip_upgrade: bool):
+    from os import chdir
+
+    chdir(BACKEND_DIR)
+
+    wait(
+        [
+            "flask",
+            "--app",
+            "runner:core_app",
+            "db",
+            "migrate",
+            "-m",
+            message,
+        ]
+    )
+    if not skip_upgrade:
+        apply_migrations()
+
+
+def enter_container():
+    wait("docker compose exec -it app bash")
+
+
+def debug():
+    wait("docker compose exec -it app python -i debug.py")
+
+
+@run_in_docker
+def seed_db():
+    reset_migrations()
+    reset_db()
+    assemble_fake_data()
+
+
+def bootstrap():
+    import os
+
+    src = Path("backend/.env.sample")
+    dst = Path("backend/.env")
+    dst.write_bytes(src.read_bytes())
+    wait("pip install -U pip uv")
+    if Path(".venv").exists():
+        print(".venv exists!")
+    else:
+        wait("uv venv")
+    wait(".venv/bin/python -m ensurepip")
+    full_pip_path = Path(".venv/bin/pip3").resolve()
+    # try:
+    #     # why do i need to do this lmao
+    #     # ensurepip just do your job
+    #     wait(f"ln -s  {full_pip_path} .venv/bin/pip")
+    # except FileExistsError:
+    #     ...
+    curr = os.stat(full_pip_path)
+    os.chmod(".venv/bin/pip", curr.st_mode)
+    wait("uv pip install -r backend/requirements.txt")
+    print("NOW RUN:\nsource .venv/bin/activate")
+
+
+def frontend():
+    chdir(FRONTEND_DIR)
+    wait("npm run dev")
+
+
+def run_everything():
+    proc = [run("./manage run-server"), run("./manage frontend")]
+    try:
+        for p in proc:
+            p.wait()
+    except KeyboardInterrupt:
+        import signal
+
+        p.send_signal(signal.SIGINT)
+        p.wait()
+    wait("docker compose down")
+    print("\nkilled")
+
+
+class RunInDockerException(Exception): ...
+
+
+if __name__ == "__main__":
+    chdir(dirname(__file__))
+
+    BACKEND_DIR = (Path(".") / "backend").resolve()
+    FRONTEND_DIR = (Path(".") / "frontend").resolve()
+    # print(BACKEND_DIR.resolve())
+    sys.path.append(str(BACKEND_DIR.resolve()))
+
+    args = parse_args()
+    try:
+        match args.action:
+            case "run-server":
+                run_server()
+            case "reset-db":
+                reset_db()
+            case "reset-migrations":
+                reset_migrations()
+            case "migrate":
+                migrate(args.migrate_message, args.skip_upgrade)
+            case "seed-db":
+                seed_db()
+            case "init-migrations":
+                init_migrations()
+            case "enter-container":
+                enter_container()
+            case "debug":
+                debug()
+            case "bootstrap":
+                bootstrap()
+            case "frontend":
+                frontend()
+            case "apply-migrations":
+                apply_migrations()
+            case "all":
+                run_everything()
+            case arg:
+                print(f'Unsupported arg  "{arg}"\navailable: {ACTIONS}')
+    except RunInDockerException:
+        args = "docker compose exec app /code/manage " + " ".join(sys.argv[1:])
+        print("entering docker")
+        wait(args)

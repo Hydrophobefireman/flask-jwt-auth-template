@@ -1,0 +1,19 @@
+:8081 {
+    root * /serve
+    file_server
+    handle /api/* {
+        uri strip_prefix /api
+        reverse_proxy localhost:8080 {
+            header_up -X-Forwarded-Proto https
+        }
+    }
+    handle /socket.io/* {
+        reverse_proxy localhost:8080 {
+            header_up -X-Forwarded-Proto https
+        }
+
+    }
+    handle /* {
+        try_files {path} /
+    }
+}

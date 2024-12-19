@@ -1,0 +1,21 @@
+FROM python:3.11-bookworm
+RUN touch /.dockerenv
+ARG userName=pete
+RUN pip install uv
+
+RUN useradd -u 1000 ${userName} \
+    && chown -R ${userName} /home \
+    && mkdir -p /home/${userName} \
+    && chown -R ${userName} /home/${userName} \
+    && usermod -aG sudo ${userName}
+
+ENV SHELL=/bin/bash
+RUN chown -R 1000:1000 /usr/local
+USER  ${userName}
+RUN pip install -U pip uv
+WORKDIR /tmp/code
+
+COPY backend/requirements.txt .
+RUN uv pip install --system -r requirements.txt -v
+
+WORKDIR /code/backend
