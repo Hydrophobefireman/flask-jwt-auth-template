@@ -15,7 +15,7 @@ def build_s3_client(s3_settings: S3Settings):
 
 
 def build_s3_client_for_presigned_url(s3_settings: S3Settings):
-    if not app_settings.is_prod and "minio" in s3_settings.endpoint_url:
+    if not app_settings.is_prod and "minio" in s3_settings.endpoint_url.host:
         # otherwise we get a minio:9000 url that is useless locally
         return boto3.client(
             "s3",
