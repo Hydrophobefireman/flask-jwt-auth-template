@@ -1,6 +1,6 @@
 FROM python:3.11-bookworm
 RUN touch /.dockerenv
-ARG userName=pete
+ARG userName=app
 RUN pip install uv
 
 RUN useradd -u 1000 ${userName} \
