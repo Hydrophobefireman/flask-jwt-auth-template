@@ -1,7 +1,8 @@
 from flask import Request
-from ._handler import State
 
 from app.internal.helpers.cors_headers import apply_cors
+
+from ._handler import State
 
 
 def middleware(request: Request, state: State):

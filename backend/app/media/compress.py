@@ -1,6 +1,7 @@
-from PIL import Image, ImageOps
-from io import BytesIO
 from gc import collect
+from io import BytesIO
+
+from PIL import Image, ImageOps
 
 
 def optimize(image_bytes: bytes):

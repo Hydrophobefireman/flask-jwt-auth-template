@@ -1,9 +1,13 @@
 from flask import Blueprint
 
-from app.db.mutations.user import create_user, verify_user_email, change_password
+from app.db.mutations.user import change_password, create_user, verify_user_email
 from app.db.mutations.util import commit
-from app.db.queries.user import get_user_by_user_name, get_user_by_email
+from app.db.queries.user import get_user_by_email, get_user_by_user_name
 from app.decorators.api_response import api
+from app.email.auth import (
+    confirm_email,
+    reset_password,
+)
 from app.exceptions.app_exception import AppException
 from app.internal.context import Context
 from app.internal.helpers.json_response import json_response
@@ -13,24 +17,19 @@ from app.internal.security.auth_token import (
     get_bearer_token,
     regenerate_auth_tokens_from_refresh,
 )
-
-from app.email.auth import (
-    confirm_email,
-    reset_password,
-)
-from app.internal.security.email_verification import (
-    should_verify_email,
-    allow_password_reset,
-)
 from app.internal.security.danger import decode_token, serialize_jwt_token
+from app.internal.security.email_verification import (
+    allow_password_reset,
+    should_verify_email,
+)
 from app.models.user import (
+    ConfirmEmail,
     LoginModel,
+    ResetPassword,
     UserEditable,
     UserIn,
     UserOut,
     UserOutSecure,
-    ConfirmEmail,
-    ResetPassword,
 )
 from app.settings import app_settings
 

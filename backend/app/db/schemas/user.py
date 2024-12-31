@@ -1,10 +1,13 @@
-from app.internal.helpers.gen_id import gen_id
 from datetime import datetime, timezone
-from app.db.web import auto_json
+
 from sqlalchemy.dialects.postgresql import TEXT
+
 from app.db.base import db
+from app.db.web import auto_json
+from app.internal.helpers.gen_id import gen_id
 from app.internal.security.danger import generate_password_hash
 from app.settings import app_settings
+
 
 @auto_json(skip=["password_hash"], serializers={}, secure=["email"])
 class User(db.Model):  # type: ignore
@@ -31,7 +34,7 @@ class User(db.Model):  # type: ignore
         user_name: str,
         name: str,
         password: str,
-        email: str=None,
+        email: str = None,
     ):
         self.id_ = gen_id()
         self.user_name = user_name.lower()
@@ -40,4 +43,3 @@ class User(db.Model):  # type: ignore
         self.name = name
         self.password_hash = generate_password_hash(password)
         self.created_at = datetime.now(timezone.utc)
-

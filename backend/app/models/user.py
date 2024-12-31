@@ -1,13 +1,12 @@
 # pylint: disable=E0213
 from typing import Optional
-from pydantic import AfterValidator, StringConstraints, Field
 
-from app.internal.helpers import sanitize
+from pydantic import AfterValidator, BaseModel, EmailStr, Field, StringConstraints
+from typing_extensions import Annotated
 
 from app.exceptions import AppException
+from app.internal.helpers import sanitize
 from app.models.base import CustomBase
-from pydantic import BaseModel, EmailStr
-from typing_extensions import Annotated
 from app.settings import app_settings
 
 

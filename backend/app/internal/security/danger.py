@@ -12,9 +12,9 @@ from time import time as _time
 
 import jwt as _jwt
 import passlib.hash as _pwhash
-from app.settings import app_settings
 
 from app.exceptions import AppException
+from app.settings import app_settings
 
 _hash_method = _pwhash.argon2.using(memory_cost=20 * 1024)
 

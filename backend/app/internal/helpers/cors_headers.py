@@ -1,4 +1,5 @@
 from flask import request
+
 from app.internal.helpers.get_origin import get_origin
 
 EXPOSE_HEADERS = ", ".join(("x-access-token", "x-refresh-token", "x-dynamic"))

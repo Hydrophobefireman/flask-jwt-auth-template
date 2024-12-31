@@ -1,11 +1,12 @@
 from app.db.schemas.user import User
-from .danger import (
-    serialize_jwt_token,
-    EMAIL_CONF_TOKEN,
-    decode_token,
-    RESET_PASSWORD_TOKEN,
-)
 from app.exceptions import AppException
+
+from .danger import (
+    EMAIL_CONF_TOKEN,
+    RESET_PASSWORD_TOKEN,
+    decode_token,
+    serialize_jwt_token,
+)
 
 
 def email_verification_token(user: User):

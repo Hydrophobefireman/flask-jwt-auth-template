@@ -1,6 +1,7 @@
 import boto3
 from botocore.client import Config
-from app.settings import app_settings, S3Settings
+
+from app.settings import S3Settings, app_settings
 
 
 # Initialize the S3 client

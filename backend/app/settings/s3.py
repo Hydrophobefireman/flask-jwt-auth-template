@@ -1,6 +1,6 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import HttpUrl
 from dotenv import load_dotenv
+from pydantic import HttpUrl
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 load_dotenv()
 
@@ -11,5 +11,3 @@ class S3Settings(BaseSettings):
     access_key_id: str
     secret_access_key: str
     bucket_name: str
-
-

@@ -6,11 +6,11 @@ from floodgate.flask import guard
 
 import app.db.schemas
 from app.db import db
-from app.settings import app_settings
 from app.internal.helpers import ip_resolver
 from app.internal.helpers.client_errors import method_not_allowed, not_found
-from app.routes import common, user
 from app.internal.helpers.cors_headers import apply_cors
+from app.routes import common, user
+from app.settings import app_settings
 
 load_dotenv()
 app = Flask(__name__)

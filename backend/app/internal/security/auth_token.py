@@ -5,9 +5,8 @@ from typing import Literal, TypedDict
 from flask import request
 from werkzeug.datastructures import Headers
 
-from app.db.queries.user import get_user_by_id, get_user_by_email
+from app.db.queries.user import get_user_by_email, get_user_by_id
 from app.exceptions import AppException
-from app.settings import app_settings
 from app.internal.security.danger import (
     ACCESS_TOKEN,
     REFRESH_TOKEN,
@@ -17,6 +16,7 @@ from app.internal.security.danger import (
 )
 from app.internal.security.danger import check_password_hash as check
 from app.internal.security.danger import decode_token as decode
+from app.settings import app_settings
 
 
 class AccessToken(TypedDict):

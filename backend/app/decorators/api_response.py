@@ -2,12 +2,13 @@ from enum import Enum, auto
 from functools import wraps
 from traceback import print_exc
 
+from flask import Response, g
+from pydantic import ValidationError
+
 from app.exceptions import AppException
 from app.internal.helpers.json_response import json_response
 from app.internal.security.auth_token import get_access_token
 from app.models.user import UserSession
-from flask import Response, g
-from pydantic import ValidationError
 
 
 class AuthModes(Enum):

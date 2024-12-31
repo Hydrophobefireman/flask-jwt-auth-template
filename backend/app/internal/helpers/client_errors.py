@@ -1,5 +1,6 @@
-from app.internal.helpers import json_response, get_origin, apply_cors
 from flask import request
+
+from app.internal.helpers import apply_cors, get_origin, json_response
 
 
 def not_found(e):

@@ -1,7 +1,8 @@
-from sqlalchemy.orm.attributes import InstrumentedAttribute
-from flask_sqlalchemy.model import Model
-from enum import Enum
 from datetime import datetime, timezone
+from enum import Enum
+
+from flask_sqlalchemy.model import Model
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 def default_serializer(value, default_value=None):

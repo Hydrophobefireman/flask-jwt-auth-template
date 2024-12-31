@@ -1,7 +1,8 @@
-from app.db.mutations.util import create, commit
+from app.db.mutations.util import commit, create
+from app.db.queries.user import get_user_by_id
 from app.db.schemas.user import User
 from app.models.user import UserIn
-from app.db.queries.user import get_user_by_id
+
 # pylint: disable=E1101
 
 

@@ -1,6 +1,8 @@
-from flask import Request
-from ._handler import State
 from time import time
+
+from flask import Request
+
+from ._handler import State
 
 
 def middleware(request: Request, state: State):

@@ -1,4 +1,5 @@
 from typing import Optional, TypeVar
+
 from app.exceptions.app_exception import AppException
 
 G = TypeVar("G")

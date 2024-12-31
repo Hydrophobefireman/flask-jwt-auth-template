@@ -1,10 +1,9 @@
 from re import IGNORECASE
 from re import compile as _compile
 
-from app.exceptions import AppException
-
-
 from psycopg.errors import UniqueViolation
+
+from app.exceptions import AppException
 
 # regex to find the offending column
 # there must be a better way - RH

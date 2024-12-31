@@ -1,9 +1,10 @@
-from pydantic_settings import BaseSettings
-from pydantic import AfterValidator, PostgresDsn, Field
-from typing import Annotated, Optional
+from os import environ, path
 from pathlib import Path
-from os import path, environ
+from typing import Annotated, Optional
+
 from dotenv import load_dotenv
+from pydantic import AfterValidator, Field, PostgresDsn
+from pydantic_settings import BaseSettings
 
 load_dotenv()
 

@@ -1,10 +1,12 @@
-from app.models.user import UserSession
-from flask import request, g
-from werkzeug.exceptions import UnsupportedMediaType
-from typing import TypeVar, Generic
-from pydantic import BaseModel
-from app.exceptions import AppException
 from enum import Enum, auto
+from typing import Generic, TypeVar
+
+from flask import g, request
+from pydantic import BaseModel
+from werkzeug.exceptions import UnsupportedMediaType
+
+from app.exceptions import AppException
+from app.models.user import UserSession
 
 M = TypeVar("M", bound=BaseModel)
 

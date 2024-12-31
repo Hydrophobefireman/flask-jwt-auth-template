@@ -1,8 +1,10 @@
-from .config import build_s3_client, build_s3_client_for_presigned_url
-from app.settings import S3Settings
 from magic import from_buffer
+
 from app.exceptions import AppException
+from app.settings import S3Settings
+
 from .compress import optimize
+from .config import build_s3_client, build_s3_client_for_presigned_url
 
 
 def check_mimetype(b: bytes):

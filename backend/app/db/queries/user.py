@@ -1,7 +1,7 @@
-from app.internal.helpers.guard import guard
 from app.internal.helpers import sanitize
-from ..schemas.user import User
+from app.internal.helpers.guard import guard
 
+from ..schemas.user import User
 
 message = "User does not exist"
 

@@ -1,8 +1,9 @@
 # pylint: skip-file
-from types import SimpleNamespace, GeneratorType
+from types import GeneratorType, SimpleNamespace
 from typing import Callable, List
-from flask import request, Response
-from flask import Flask, g
+
+from flask import Flask, Response, g, request
+
 from app.internal.helpers import guard
 
 

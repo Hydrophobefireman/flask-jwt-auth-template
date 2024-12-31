@@ -8,24 +8,24 @@
 # and sending binary using a wsgi server is pretty performant
 
 from functools import wraps
+from gc import collect
 from json import dumps, loads
-
 from os import stat
 from pathlib import Path
-from flask import send_file
 from time import time
 
+from flask import send_file
+
+from app.internal.constants import CACHE_DIR
+from app.settings import app_settings
 
 from .safe_io import (
+    close_lockfile,
     open_and_read,
     open_and_write,
-    close_lockfile,
     safe_mkdir,
     safe_remove,
 )
-from app.internal.constants import CACHE_DIR
-from app.settings import app_settings
-from gc import collect
 
 DEFAULT_CACHE_TIMEOUT = 60 * 60
 DATA_SUFFIX = ".cache.json"

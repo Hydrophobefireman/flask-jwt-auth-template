@@ -1,5 +1,6 @@
-from app.settings import app_settings
 from flask import send_from_directory
+
+from app.settings import app_settings
 
 ONE_YEAR_IN_SECONDS = 365 * 86400
 

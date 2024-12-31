@@ -1,4 +1,5 @@
 from flask import Blueprint
+
 from app.internal.helpers import send_static_file
 
 router = Blueprint("common", __name__)
