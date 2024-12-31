@@ -23,7 +23,7 @@ def upload_media(media: bytes, path: str):
         media = optimize(media)
     # print(f"uploading {media[:100]} to {path}")
     s3_client.put_object(
-        Bucket=s3_settings.bucket_name, Key=path, Body=media, ContentType=mt
+        Bucket=s3_settings.bucket_name, Key=path, Body=media, ContentType=mt,
     )
 
     return [path, mt]

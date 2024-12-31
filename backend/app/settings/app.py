@@ -19,14 +19,14 @@ class _AppSettings(BaseSettings):
             lambda x: PostgresDsn(
                 str(x)
                 .replace("postgres://", "postgresql://")
-                .replace("postgresql://", "postgresql+psycopg://")
-            )
+                .replace("postgresql://", "postgresql+psycopg://"),
+            ),
         ),
     ]
     refresh_token_salt: str
     disable_caching: Optional[bool] = Field(default=False)
     static_dir: Optional[str] = str(
-        Path(path.dirname(path.realpath(__file__)), "..", "static").resolve()
+        Path(path.dirname(path.realpath(__file__)), "..", "static").resolve(),
     )
     is_prod: bool
     email_features_enabled: Optional[bool] = Field(default=False)

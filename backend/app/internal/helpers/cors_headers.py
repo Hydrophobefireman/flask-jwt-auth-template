@@ -10,7 +10,7 @@ def apply_cors(resp):
     origin = get_origin(request)
     resp.headers["access-control-allow-origin"] = origin
     resp.headers["access-control-allow-headers"] = request.headers.get(
-        "access-control-request-headers", "*"
+        "access-control-request-headers", "*",
     )
     resp.headers["access-control-allow-methods"] = ALLOWED_METHODS
     resp.headers["access-control-allow-credentials"] = "true"

@@ -59,7 +59,7 @@ def auto_json(secure=[], serializers={}, skip=[]):
             ret["_secure_"] = {x: get(x) for x in secure_keys}
             return ret
 
-        setattr(cls, "as_json", property(as_json))
+        cls.as_json = property(as_json)
         return cls
 
     return cl

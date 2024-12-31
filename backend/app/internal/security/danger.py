@@ -67,14 +67,14 @@ def serialize_jwt_token(data: dict) -> str:
         )  # atleast 15 mins
         print(data["exp"])
     return to_str(
-        _jwt_encode_token(data, app_settings.jwt_signing_key, algorithm="HS512")
+        _jwt_encode_token(data, app_settings.jwt_signing_key, algorithm="HS512"),
     )
 
 
 def decode_token(data: str) -> dict | None:
     try:
         return _jwt_decode_token(
-            data, app_settings.jwt_signing_key, algorithms=["HS512"]
+            data, app_settings.jwt_signing_key, algorithms=["HS512"],
         )
     except _EXPIRED:
         return None

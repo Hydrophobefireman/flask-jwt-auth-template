@@ -8,7 +8,7 @@ from app.exceptions import AppException
 # regex to find the offending column
 # there must be a better way - RH
 find_error = _compile(
-    r"Key\s*\(\"?(?P<key>.*?)\"?\)=\((?P<val>.*?)\)", IGNORECASE
+    r"Key\s*\(\"?(?P<key>.*?)\"?\)=\((?P<val>.*?)\)", IGNORECASE,
 ).search
 
 

@@ -55,7 +55,7 @@ def regenerate_access_token(
 
 
 def issue_access_token(
-    user_id: str, user_name: str, is_admin: bool, verified_email: bool
+    user_id: str, user_name: str, is_admin: bool, verified_email: bool,
 ) -> AccessToken:
     return AccessToken(
         {
@@ -64,7 +64,7 @@ def issue_access_token(
             "user_name": user_name,
             "is_admin": is_admin,
             "verified_email": verified_email,
-        }
+        },
     )
 
 
@@ -74,7 +74,7 @@ def issue_refresh_token(user_id, password_hash) -> RefreshToken:
             "token_type": REFRESH_TOKEN,  # type:ignore
             "user_id": user_id,
             "integrity": generate_password_hash(get_integrity(user_id, password_hash)),
-        }
+        },
     )
 
 
@@ -96,7 +96,7 @@ def extract_access_token(bearer_token: str, strict: bool) -> AccessToken | None:
 
     if access is None:
         if strict:
-            raise AccessTokenExpired()
+            raise AccessTokenExpired
         return None
 
     return AccessToken(access)
@@ -123,8 +123,8 @@ def authenticate(email: str, password: str):
     is_admin = user_data.is_admin
     access_token = serialize_jwt_token(
         issue_access_token(
-            user_data.id_, user_name, is_admin, user_data.has_verified_email
-        )
+            user_data.id_, user_name, is_admin, user_data.has_verified_email,
+        ),
     )  # type: ignore
     refresh_token = serialize_jwt_token(issue_refresh_token(user_data.id_, pw_hash))  # type: ignore
     return access_token, refresh_token, user_data

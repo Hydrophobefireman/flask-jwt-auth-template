@@ -56,7 +56,7 @@ def handle_validation_error(e):
 
 
 NULL_USER = UserSession(
-    user_name=None, user_id=None, is_admin=False, verified_email=False
+    user_name=None, user_id=None, is_admin=False, verified_email=False,
 )
 
 

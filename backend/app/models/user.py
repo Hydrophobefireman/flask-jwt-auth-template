@@ -1,8 +1,7 @@
 # pylint: disable=E0213
-from typing import Optional
+from typing import Annotated, Optional
 
 from pydantic import AfterValidator, BaseModel, EmailStr, Field, StringConstraints
-from typing_extensions import Annotated
 
 from app.exceptions import AppException
 from app.internal.helpers import sanitize
@@ -14,7 +13,7 @@ def validate_user(user: str):
     sanitized = sanitize(user)
     if sanitized != user.lower():
         raise AppException(
-            "User cannot contain invalid characters. Only letters, numbers and underscores allowed."
+            "User cannot contain invalid characters. Only letters, numbers and underscores allowed.",
         )
     return sanitized
 
@@ -30,7 +29,7 @@ class UserSession(BaseModel):
 PasswordType = Annotated[str, StringConstraints(min_length=4)]
 UserName = Annotated[
     Annotated[
-        str, StringConstraints(strip_whitespace=True, max_length=100, to_lower=True)
+        str, StringConstraints(strip_whitespace=True, max_length=100, to_lower=True),
     ],
     AfterValidator(validate_user),
 ]

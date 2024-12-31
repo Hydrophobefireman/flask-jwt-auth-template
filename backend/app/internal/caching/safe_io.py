@@ -10,7 +10,6 @@ _LOCKFILE_SUFFIX = "~#.lock"
 def wait_for_lock_file(filename):
     while _lockfile_exists(filename):
         sleep(0.1)
-    return
 
 
 def lockfile_path(original_file_name: str) -> str:
@@ -51,7 +50,7 @@ def open_and_write(filename: Path, data, should_wait_for_lockfile=False, mode="w
     if should_wait_for_lockfile:
         wait_for_lock_file(filename)
     elif _lockfile_exists(filename):
-        return None
+        return
     create_lockfile(filename)
 
     filename.write_text(data) if mode == "w" else filename.write_bytes(data)

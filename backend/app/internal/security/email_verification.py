@@ -15,7 +15,7 @@ def email_verification_token(user: User):
 
 def reset_password_token(user: User):
     return serialize_jwt_token(
-        {"user_id": user.id_, "token_type": RESET_PASSWORD_TOKEN}
+        {"user_id": user.id_, "token_type": RESET_PASSWORD_TOKEN},
     )
 
 

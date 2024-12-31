@@ -25,5 +25,4 @@ def build_s3_client_for_presigned_url(s3_settings: S3Settings):
             aws_secret_access_key=s3_settings.secret_access_key,
             config=Config(signature_version="s3v4"),
         )
-    else:
-        return build_s3_client(s3_settings)
+    return build_s3_client(s3_settings)
