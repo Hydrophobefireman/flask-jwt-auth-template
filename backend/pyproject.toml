@@ -2,5 +2,25 @@
 
 
 [project]
+requires-python = ">=3.13"
 name = "app"
 version = "0.0.1"
+dependencies = [
+    "alembic>=1.16.5",
+    "argon2>=0.1.10",
+    "boto3>=1.40.42",
+    "flask>=3.1.2",
+    "flask-migrate>=4.1.0",
+    "flask-sqlalchemy>=3.1.1",
+    "floodgate>=2.0.0",
+    "gunicorn>=23.0.0",
+    "passlib>=1.7.4",
+    "pillow>=11.3.0",
+    "psycopg[binary]>=3.2.10",
+    "pydantic[email]>=2.11.9",
+    "pydantic-settings>=2.11.0",
+    "pyjwt>=2.10.1",
+    "python-dotenv>=1.1.1",
+    "python-magic>=0.4.27",
+    "requests>=2.32.5",
+]
